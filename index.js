@@ -88,15 +88,14 @@ app.get('/callback', async (req, res) => {
 });
 
 // Endpoint to add song to the chosen library (playlist or My Library)
-app.post('/add-song', async (req, res) => {
-    const { songUrl, libraryId } = req.body;
-    const accessToken = req.headers.authorization; // Extract token
-
-    console.log('songUrl:', songUrl);  // Log the song URL for debugging
-    console.log('accessToken:', accessToken);  // Log the access token for debugging
-    console.log('libraryId:', libraryId);  // Log the libraryId for debugging
-
+app.post('/add-song', async (req, res) => { 
     try {
+        const { songUrl, libraryId } = req.body;
+        const accessToken = req.headers.authorization; // Extract token
+    
+        console.log('songUrl:', songUrl);  // Log the song URL for debugging
+        console.log('accessToken:', accessToken);  // Log the access token for debugging
+        console.log('libraryId:', libraryId);  // Log the libraryId for debugging
         // Validate that the URL is a valid Spotify song URL
         const trackIdRegex = /spotify\.com\/track\/([a-zA-Z0-9]{22})/;
         const match = songUrl.match(trackIdRegex);
@@ -132,10 +131,10 @@ app.post('/add-song', async (req, res) => {
 
         console.log("addTrackResponse:", addTrackResponse);
 
-        return res.status(200).send({ message: 'Song added to your library successfully!', addTrackResponse });
+        return res.status(200).json({ message: 'Song added to your library successfully!', addTrackResponse });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: error });
+        // console.error(error);
+        return res.status(200).json({ error: error });
     }
 });
 
