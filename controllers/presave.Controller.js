@@ -87,7 +87,7 @@ const getPresaveController = async (req, res) => {
 // Function to fetch presave data and schedule the task
 const handlePresave = async (req, res) => {
     const { presaveID } = req.params;
-    const { accessToken } = req.body;
+    const { accessToken,libraryId="my-library" } = req.body;
 
     try {
         // Fetch presave data from Firestore
@@ -118,7 +118,7 @@ const handlePresave = async (req, res) => {
         const userReleaseTime = moment.tz(releaseTime, timeZone).toDate();
         console.log("User release time:", timeZone,userReleaseTime);
         // Schedule the task
-        scheduleTask({ userReleaseTime, userId, songLink, accessToken, timeZone });
+        scheduleTask({ userReleaseTime, userId, songLink, accessToken, timeZone, libraryId });
 
         return res.status(200).json({ message: "Song scheduling successful." });
     } catch (error) {
