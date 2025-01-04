@@ -1,12 +1,12 @@
+require('dotenv').config();
 const {
     SPOTIFY_CLIENT_ID,
-    SPOTIFY_AUTH_URL,
+    SPOTIFY_REDIRECT_URI,
 } = process.env;
 
 const loginController = (req, res) => {
     const scope = "user-library-modify user-read-private user-read-email playlist-modify-public playlist-modify-private";
-
-    const authUrl = `${SPOTIFY_AUTH_URL}?response_type=code&client_id=${SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const authUrl = `${SPOTIFY_AUTH_URL}?response_type=code&client_id=${SPOTIFY_CLIENT_ID}&scope=${encodeURIComponent(scope)}&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}`;
     res.redirect(authUrl);
 }
 
