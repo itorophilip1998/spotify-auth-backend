@@ -19,7 +19,7 @@ const addSongController = async (req, res) => {
         const trackId = match[1]; // Extract trackId from songUrl
 
         // Determine the endpoint based on the libraryId
-        let endpoint = '';
+    
         let addTrackResponse = "";
         if (libraryId === 'my-library') {
             // Add to the user's library
