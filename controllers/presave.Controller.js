@@ -46,4 +46,41 @@ const preSaveController = async (req, res) => {
     }
 };
 
-module.exports = { preSaveController };
+// Controller to handle fetching presaves by id or creatorId
+const getPresaveController = async (req, res) => {
+    try {
+        const { id, creatorId } = req.query;
+
+        if (!id && !creatorId) {
+            return res.status(400).json({ error: "Either 'id' or 'creatorId' is required to fetch a presave." });
+        }
+
+        let querySnapshot;
+        if (id) {
+            // Fetch presave by ID
+            querySnapshot = await fireStore.collection("presaves").doc(id).get();
+        } else if (creatorId) {
+            // Fetch presave by creatorId
+            querySnapshot = await fireStore.collection("presaves")
+                .where("creatorId", "==", creatorId)
+                .limit(1)
+                .get();
+        }
+
+        if (!querySnapshot.exists && querySnapshot.empty) {
+            return res.status(404).json({ error: "Presave not found." });
+        }
+
+        const presaveData = querySnapshot.data ? querySnapshot.data() : querySnapshot.docs[0].data();
+
+        res.status(200).json({
+            message: "Presave retrieved successfully",
+            presave: presaveData,
+        });
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { preSaveController, getPresaveController };
