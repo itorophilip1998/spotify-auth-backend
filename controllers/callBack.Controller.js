@@ -79,6 +79,7 @@ const callbackController = async (req, res) => {
             });
             console.log('User data saved.');
         }
+  
 
         // Step 4: Redirect the user back to the frontend with the access token
         res.redirect(`http://localhost:3000/fan-page/${presaveID}?access_token=${access_token}`);

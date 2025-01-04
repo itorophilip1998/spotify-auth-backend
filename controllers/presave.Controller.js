@@ -80,4 +80,42 @@ const getPresaveController = async (req, res) => {
     }
 };
 
+
+
+// Function to fetch presave data and schedule the task
+const handlePresave = async (req, res) => {
+    const { presaveID } = req.params;
+
+    try {
+        // Fetch presave data from Firestore
+        const presaveRef = fireStore.collection("presaves").doc(presaveID);
+        const presaveDoc = await presaveRef.get();
+
+        if (!presaveDoc.exists) {
+            return res.status(404).json({ error: "Presave not found" });
+        }
+
+        const presaveData = presaveDoc.data();
+        const { userId, songLink, releaseDate, timeZone, refreshToken } = presaveData;
+
+        // Fetch user access token (assuming it's stored in Firestore)
+        const userRef = fireStore.collection("users").doc(userId);
+        const userDoc = await userRef.get();
+        const accessToken = userDoc.data().spotify.accessToken;
+
+        // Convert release date to the user's time zone
+        const releaseTime = new Date(releaseDate);
+        const userReleaseTime = new Date(releaseTime.toLocaleString("en-US", { timeZone }));
+
+        // Schedule the task
+        scheduleTask(userReleaseTime, userId, songLink, accessToken);
+
+        res.status(200).json({ message: "Song scheduling successful." });
+    } catch (error) {
+        console.error("Error handling presave:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
 module.exports = { preSaveController, getPresaveController };

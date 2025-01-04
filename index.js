@@ -9,7 +9,7 @@ const { callbackController } = require('./controllers/callBack.Controller');
 const { addSongController } = require('./controllers/addSong.Controller');
 const { trackDetailsController } = require('./controllers/trackDetails.Controller');
 const { getLibraryController } = require('./controllers/getLibrary.Controller');
-const { preSaveController, getPresaveController } = require('./controllers/presave.Controller');
+const { preSaveController, getPresaveController ,handlePresave } = require('./controllers/presave.Controller');
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -53,6 +53,9 @@ app.post('/presave', preSaveController);
 
 // Endpoint to pre-save a song
 app.get('/get-presave', getPresaveController);
+
+// Endpoint to handle pre-save
+app.post("/presave/:presaveID", handlePresave);
 
 
 // Start server
