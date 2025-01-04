@@ -23,7 +23,7 @@ const addSongController = async (req, res) => {
         let addTrackResponse = "";
         if (libraryId === 'my-library') {
             // Add to the user's library
-            const addTrackResponse = await axios.put(
+             addTrackResponse = await axios.put(
                 `https://api.spotify.com/v1/me/tracks?ids=${trackId}`,
                 null,
                 {
@@ -35,7 +35,7 @@ const addSongController = async (req, res) => {
             );
         } else {
             // Add track to the selected library
-            const addTrackResponse = await axios.post(
+             addTrackResponse = await axios.post(
                 `https://api.spotify.com/v1/playlists/${libraryId}/tracks?uris=spotify:track:${trackId}`,
                 null,
                 {
