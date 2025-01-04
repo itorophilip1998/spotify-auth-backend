@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator");
-const db = require("../config/firestore");
+const { fireStore } = require("../config/firestore");
 
 const preSaveController = async (req, res) => {
-    try {
+    try { 
         // Validate request input
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -12,7 +12,7 @@ const preSaveController = async (req, res) => {
         const { creatorId, title, artist, releaseDate, timezone, providers } = req.body;
 
         // Query the "presaves" collection to check for its existence
-        const presavesSnapshot = await db.collection("presaves").limit(1).get();
+        const presavesSnapshot = await fireStore.collection("presaves").limit(1).get();
 
         // If the collection does not exist, presavesSnapshot.empty will be true
         if (presavesSnapshot.empty) {
@@ -30,7 +30,7 @@ const preSaveController = async (req, res) => {
             createdAt: new Date().toISOString(), // Add a timestamp for tracking
         };
 
-        const newPresaveRef = await db.collection("presaves").add(newPresaveData);
+        const newPresaveRef = await fireStore.collection("presaves").add(newPresaveData);
 
         res.status(201).json({
             message: "Presave created successfully",
