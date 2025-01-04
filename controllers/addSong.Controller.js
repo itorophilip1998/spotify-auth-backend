@@ -20,33 +20,41 @@ const addSongController = async (req, res) => {
 
         // Determine the endpoint based on the libraryId
         let endpoint = '';
+        let addTrackResponse = "";
         if (libraryId === 'my-library') {
             // Add to the user's library
-            endpoint = `https://api.spotify.com/v1/me/tracks?ids=${trackId}`;
+            const addTrackResponse = await axios.put(
+                `https://api.spotify.com/v1/me/tracks?ids=${trackId}`,
+                null,
+                {
+                    headers: {
+                        Authorization: `${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
         } else {
-            // Add to a playlist
-            endpoint = `https://api.spotify.com/v1/playlists/${libraryId}/tracks?uris=spotify:track:${trackId}`;
+            // Add track to the selected library
+            const addTrackResponse = await axios.post(
+                `https://api.spotify.com/v1/playlists/${libraryId}/tracks?uris=spotify:track:${trackId}`,
+                null,
+                {
+                    headers: {
+                        Authorization: `${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
         }
 
-
-        // Add track to the selected library
-        const addTrackResponse = await axios.post(
-            endpoint, // Dynamic endpoint based on library selection
-            null,
-            {
-                headers: {
-                    Authorization: `${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
 
         console.log("addTrackResponse:", addTrackResponse);
 
         return res.status(200).json({ message: 'Song added to your library successfully!', addTrackResponse });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: error });
+        // return res.status(200)
     }
 }
 

@@ -1,3 +1,9 @@
+const  axios  = require("axios");
+
+const {
+    SPOTIFY_TRACK_URL
+} = process.env;
+
 const trackDetailsController = async (req, res) => {
     const { songId } = req.query;
 
@@ -10,8 +16,6 @@ const trackDetailsController = async (req, res) => {
     if (!accessToken) {
         return res.status(401).json({ error: "Unauthorized. No access token." });
     }
-
-    // console.log(SPOTIFY_TRACK_URL + songId);
     try {
         // Fetch track details from Spotify using the track ID
         const trackResponse = await axios.get(SPOTIFY_TRACK_URL + songId, {
@@ -21,7 +25,7 @@ const trackDetailsController = async (req, res) => {
             },
         });
         console.log(trackResponse);
-
+        
         // Send track details to the frontend
         res.status(200).json({
             id: trackResponse.data.id,

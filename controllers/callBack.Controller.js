@@ -125,7 +125,7 @@ const refreshTokenController = async (userId) => {
             await userRef.update({
                 'spotify.accessToken': newAccessToken,
                 'spotify.refreshToken': newRefreshToken,  // Update the refresh token
-                'spotify.tokenExpiresAt': Date.now() + (3600 * 1000),  // Reset expiration time
+                'spotify.tokenExpiresAt': Date.now() + (3000 * 1000),  // Reset expiration time
             });
 
             console.log('Access token and refresh token refreshed.');
