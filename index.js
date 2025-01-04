@@ -23,10 +23,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-
-
-
-
+ 
 app.get('/login', loginController);
 
 // Step 2: Callback to exchange the code for an access token
