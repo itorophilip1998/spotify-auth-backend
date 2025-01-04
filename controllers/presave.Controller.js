@@ -1,8 +1,11 @@
 const { validationResult } = require("express-validator");
 const { fireStore } = require("../config/firestore");
-
+const generateRandomId = () => {
+    const randomId = `creatorId-${Date.now()}${Math.floor(Math.random() * 10000000000000000)}`;
+    return randomId;
+};
 const preSaveController = async (req, res) => {
-    try { 
+    try {
         // Validate request input
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -21,7 +24,7 @@ const preSaveController = async (req, res) => {
 
         // Create a new presave document
         const newPresaveData = {
-            creatorId,
+            creatorId: generateRandomId(),
             title,
             artist,
             releaseDate,
