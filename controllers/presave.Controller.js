@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const { fireStore } = require("../config/firestore");
+const { scheduleTask } = require("../utils/scheduleTask");
 const generateRandomId = () => {
     const randomId = `creatorId-${Date.now()}${Math.floor(Math.random() * 10000000000000000)}`;
     return randomId;
@@ -12,7 +13,7 @@ const preSaveController = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { artist,songLink, title, releaseDate, timezone, providers } = req.body;
+        const { artist, songLink, title, releaseDate, timezone, providers } = req.body;
 
         // Query the "presaves" collection to check for its existence
         const presavesSnapshot = await fireStore.collection("presaves").limit(1).get();
@@ -30,7 +31,7 @@ const preSaveController = async (req, res) => {
             releaseDate,
             timezone,
             providers,
-            songLink, 
+            songLink,
             createdAt: new Date().toISOString(), // Add a timestamp for tracking
         };
 
@@ -52,7 +53,7 @@ const getPresaveController = async (req, res) => {
     try {
         const { id } = req.query;
 
-        if (!id ) {
+        if (!id) {
             return res.status(400).json({ error: "Either 'id' is required to fetch a presave." });
         }
 
@@ -60,7 +61,7 @@ const getPresaveController = async (req, res) => {
         if (id) {
             // Fetch presave by ID
             querySnapshot = await fireStore.collection("presaves").doc(id).get();
-         
+
         }
 
         if (!querySnapshot.exists && querySnapshot.empty) {
@@ -71,8 +72,8 @@ const getPresaveController = async (req, res) => {
 
         res.status(200).json({
             message: "Presave retrieved successfully",
-            presave: { ...presaveData, id:querySnapshot.id },
-         
+            presave: { ...presaveData, id: querySnapshot.id },
+
         });
     } catch (error) {
         console.error("Error:", error.message);
@@ -84,7 +85,7 @@ const getPresaveController = async (req, res) => {
 
 // Function to fetch presave data and schedule the task
 const handlePresave = async (req, res) => {
-    const { presaveID } = req.params;
+    const { presaveID, accessToken } = req.params;
 
     try {
         // Fetch presave data from Firestore
@@ -96,26 +97,34 @@ const handlePresave = async (req, res) => {
         }
 
         const presaveData = presaveDoc.data();
-        const { userId, songLink, releaseDate, timeZone, refreshToken } = presaveData;
+        const { songLink, releaseDate, timeZone } = presaveData;
 
-        // Fetch user access token (assuming it's stored in Firestore)
-        const userRef = fireStore.collection("users").doc(userId);
-        const userDoc = await userRef.get();
-        const accessToken = userDoc.data().spotify.accessToken;
+        // Query users collection to find the user by accessToken
+        const usersRef = fireStore.collection("users");
+        const querySnapshot = await usersRef.where("spotify.accessToken", "==", accessToken).get();
+
+        if (querySnapshot.empty) {
+            return res.status(404).json({ error: "User not found for the provided access token." });
+        }
+
+        // Assuming there is only one document that matches the accessToken
+        const userDoc = querySnapshot.docs[0];
+        const userId = userDoc.id;
 
         // Convert release date to the user's time zone
         const releaseTime = new Date(releaseDate);
-        const userReleaseTime = new Date(releaseTime.toLocaleString("en-US", { timeZone }));
+        const userReleaseTime = moment.tz(releaseTime, timeZone).toDate();
 
         // Schedule the task
-        scheduleTask(userReleaseTime, userId, songLink, accessToken);
+        scheduleTask({ userReleaseTime, userId, songLink, accessToken, timeZone });
 
-        res.status(200).json({ message: "Song scheduling successful." });
+        return res.status(200).json({ message: "Song scheduling successful." });
     } catch (error) {
-        console.error("Error handling presave:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Error handling presave:", error.message);
+        return res.status(500).json({ error: "Internal server error" });
     }
 };
 
 
-module.exports = { preSaveController, getPresaveController };
+
+module.exports = { preSaveController, getPresaveController, handlePresave };
