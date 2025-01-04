@@ -52,7 +52,7 @@ app.get('/get-libraries', getLibraryController);
 app.post('/presave', preSaveController);
 
 // Endpoint to pre-save a song
-app.post('/get-presave', getPresaveController);
+app.get('/get-presave', getPresaveController);
 
 
 // Start server
