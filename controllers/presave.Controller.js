@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const { fireStore } = require("../config/firestore");
 const { scheduleTask } = require("../utils/scheduleTask");
+const moment = require("moment");
 const generateRandomId = () => {
     const randomId = `creatorId-${Date.now()}${Math.floor(Math.random() * 10000000000000000)}`;
     return randomId;
@@ -13,7 +14,7 @@ const preSaveController = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { artist, songLink, title, releaseDate, timezone, providers } = req.body;
+        const { artist, songLink, title, releaseDate, timeZone, providers } = req.body;
 
         // Query the "presaves" collection to check for its existence
         const presavesSnapshot = await fireStore.collection("presaves").limit(1).get();
@@ -22,14 +23,14 @@ const preSaveController = async (req, res) => {
         if (presavesSnapshot.empty) {
             console.log("No 'presaves' collection found. Creating a new one...");
         }
-
+     
         // Create a new presave document
         const newPresaveData = {
             creatorId: generateRandomId(),
             title,
             artist,
             releaseDate,
-            timezone,
+            timeZone,
             providers,
             songLink,
             createdAt: new Date().toISOString(), // Add a timestamp for tracking
@@ -85,7 +86,8 @@ const getPresaveController = async (req, res) => {
 
 // Function to fetch presave data and schedule the task
 const handlePresave = async (req, res) => {
-    const { presaveID, accessToken } = req.params;
+    const { presaveID } = req.params;
+    const { accessToken } = req.body;
 
     try {
         // Fetch presave data from Firestore
@@ -114,7 +116,7 @@ const handlePresave = async (req, res) => {
         // Convert release date to the user's time zone
         const releaseTime = new Date(releaseDate);
         const userReleaseTime = moment.tz(releaseTime, timeZone).toDate();
-
+        console.log("User release time:", timeZone,userReleaseTime);
         // Schedule the task
         scheduleTask({ userReleaseTime, userId, songLink, accessToken, timeZone });
 
