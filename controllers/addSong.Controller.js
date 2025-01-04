@@ -1,7 +1,9 @@
+const axios = require("axios");
+
 const addSongController = async (req, res) => {
+    const { songUrl, libraryId } = req.body;
+    const accessToken = req.headers.authorization; // Extract token 
     try {
-        const { songUrl, libraryId } = req.body;
-        const accessToken = req.headers.authorization; // Extract token
 
         console.log('songUrl:', songUrl);  // Log the song URL for debugging
         console.log('accessToken:', accessToken);  // Log the access token for debugging
@@ -43,8 +45,8 @@ const addSongController = async (req, res) => {
 
         return res.status(200).json({ message: 'Song added to your library successfully!', addTrackResponse });
     } catch (error) {
-        // console.error(error);
-        return res.status(200).json({ error: error });
+        console.error(error);
+        return res.status(500).json({ error: error });
     }
 }
 

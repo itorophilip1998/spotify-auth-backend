@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const getLibraryController = async (req, res) => {
     const accessToken = req.headers.authorization; // Extract token
 
@@ -17,7 +19,7 @@ const getLibraryController = async (req, res) => {
         res.json(libraries);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Failed to fetch libraries' });
+        res.status(500).json({ error: 'Failed to fetch libraries', error });
     }
 }
 
