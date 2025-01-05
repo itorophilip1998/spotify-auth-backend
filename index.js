@@ -6,7 +6,7 @@ const { router, setQueues } = require('@bull-board/express'); // Correct import 
 const { taskQueue } = require('./services/taskQueue');  // Import your taskQueue
 const { BullAdapter } = require('@bull-board/express'); // Correct import for Bull v4.x
 const { preSaveController } = require('./spotify/controllers/presave.Controller');
-const spotifyRoutes = require('./spotify/routes');
+const spotifyRoutes = require('./spotify/routes/sportify.Route');
 
 // Set up Bull Board to monitor the taskQueue
 setQueues([new BullAdapter(taskQueue)]);

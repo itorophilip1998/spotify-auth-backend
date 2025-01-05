@@ -1,6 +1,6 @@
 const Bull = require('bull');
 const moment = require('moment-timezone');
-const { addToLibrary } = require('../spotify/services/spotifyService');
+const { addToLibrary } = require('../spotify/services/spotify.Service');
 
 // Create a new queue (ensure it's using Bull v4.x)
 const taskQueue = new Bull('taskQueue', {
@@ -25,22 +25,5 @@ taskQueue.process(async (job) => {
         console.error(`Error adding song for user ${userId}:`, error.message);
     }
 });
-
-// Function to schedule a task for a user
-const scheduleTask = ({ userReleaseTime, userId, songLink, accessToken, timeZone, libraryId }) => {
-    // Convert the release date to the user's time zone and get the cron time format
-    const userTime = moment.tz(userReleaseTime, timeZone);
-
-    // Calculate the delay (in milliseconds) until the user release time
-    const delay = userTime.diff(moment());
-
-    // Add the job to the queue with a delay
-    taskQueue.add(
-        { userId, songLink, accessToken, libraryId },
-        { delay } // Delay the job execution to the user's release time
-    );
-
-    console.log(`Task scheduled for user ${userId} at ${userTime.format()} (${timeZone}).`);
-};
-
-module.exports = { scheduleTask, taskQueue };
+ 
+module.exports = { taskQueue };
