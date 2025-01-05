@@ -2,6 +2,30 @@
 # yarn lockfile v1
 
 
+"@bull-board/api@6.6.1":
+  version "6.6.1"
+  resolved "https://registry.npmjs.org/@bull-board/api/-/api-6.6.1.tgz#3fccdd686da868b3e9c4e8f8bba1e83146bd48d3"
+  integrity sha512-IlG60N/r/pGfZH39/IZz2rfzBXOuTpKA+5SOLX5ESqk/JPtHq2ipnaczdxSsXIcXtefmhwyhBBfQujW1bJdJlw==
+  dependencies:
+    redis-info "^3.0.8"
+
+"@bull-board/express@^6.6.1":
+  version "6.6.1"
+  resolved "https://registry.npmjs.org/@bull-board/express/-/express-6.6.1.tgz#cdfd12f8303c6ebc6bf066a50b8b8d145b8f0ba8"
+  integrity sha512-/3ghya2Uroq3yIEQfK4XG4oT/zGR4NMbEveqLFcOuvhvm4x3IAO3z04ugp0eDvr8pxgD3uS2Tg1cQimzUOIo4A==
+  dependencies:
+    "@bull-board/api" "6.6.1"
+    "@bull-board/ui" "6.6.1"
+    ejs "^3.1.10"
+    express "^4.21.1 || ^5.0.0"
+
+"@bull-board/ui@6.6.1":
+  version "6.6.1"
+  resolved "https://registry.npmjs.org/@bull-board/ui/-/ui-6.6.1.tgz#b63234ddd30d4da10ecb032200b933a74c042b40"
+  integrity sha512-L4xELOzDgUz4o7mQssGM0sef1QD41AyJ3iHbXIi8V72jj2FXeDwv63BoccZTC3GZHHNo21RkslcJvBYPkUsEnA==
+  dependencies:
+    "@bull-board/api" "6.6.1"
+
 "@fastify/busboy@^3.0.0":
   version "3.1.1"
   resolved "https://registry.npmjs.org/@fastify/busboy/-/busboy-3.1.1.tgz#af3aea7f1e52ec916d8b5c9dcc0f09d4c060a3fc"
@@ -787,6 +811,13 @@ ejs@3.1.6:
   dependencies:
     jake "^10.6.1"
 
+ejs@^3.1.10:
+  version "3.1.10"
+  resolved "https://registry.npmjs.org/ejs/-/ejs-3.1.10.tgz#69ab8358b14e896f80cc39e62087b88500c3ac3b"
+  integrity sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==
+  dependencies:
+    jake "^10.8.5"
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
@@ -890,7 +921,7 @@ express@4.17.1:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
-express@^4.21.2:
+"express@^4.21.1 || ^5.0.0", express@^4.21.2:
   version "4.21.2"
   resolved "https://registry.npmjs.org/express/-/express-4.21.2.tgz#cf250e48362174ead6cea4a566abef0162c1ec32"
   integrity sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==
@@ -1285,7 +1316,7 @@ is-stream@^2.0.0:
   resolved "https://registry.npmjs.org/is-stream/-/is-stream-2.0.1.tgz#fac1e3d53b97ad5a9d0ae9cef2389f5810a5c077"
   integrity sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==
 
-jake@^10.6.1:
+jake@^10.6.1, jake@^10.8.5:
   version "10.9.2"
   resolved "https://registry.npmjs.org/jake/-/jake-10.9.2.tgz#6ae487e6a69afec3a5e167628996b59f35ae2b7f"
   integrity sha512-2P4SQ0HrLQ+fw6llpLnOaGAvN2Zu6778SJMrCUwns4fOoG9ayrTiZk3VV8sCPkVZF8ab0zksVpS8FDY5pRCNBA==

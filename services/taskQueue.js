@@ -1,14 +1,13 @@
 const Bull = require('bull');
-const redis = require('redis');
 const moment = require('moment-timezone');
-const { addToLibrary } = require('../services/spotifyService');
+const { addToLibrary } = require('../spotify/services/spotifyService');
 
-// Create a queue for task scheduling
+// Create a new queue (ensure it's using Bull v4.x)
 const taskQueue = new Bull('taskQueue', {
     redis: {
-        host: 'localhost', // or your Redis server details
-        port: 6379,
-    },
+        host: 'localhost',
+        port: 6379, // Update with your Redis configuration if needed
+    }
 });
 
 // Process the jobs from the queue

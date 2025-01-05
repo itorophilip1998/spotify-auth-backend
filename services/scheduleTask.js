@@ -1,13 +1,13 @@
 const cron = require("node-cron");
 const moment = require("moment-timezone");
-const { addToLibrary } = require("../services/spotifyService");
+const { addToLibrary } = require("../sportify/services/spotifyService");
 
 // Function to schedule task based on user timezone
-const scheduleTask = ({ userReleaseTime, userId, songLink, accessToken, timeZone,libraryId }) => {
+const scheduleTask = ({ userReleaseTime, userId, songLink, accessToken, timeZone, libraryId }) => {
     // Convert the release date to the user's time zone and get the cron time format
     const userTime = moment.tz(userReleaseTime, timeZone);
     const cronTime = userTime.format("m H D M *"); // 'MM HH DD MM ddd'
-   
+
     // Schedule the song to be added to the library at the user's release time (converted to correct time zone)
     cron.schedule(
         cronTime,
