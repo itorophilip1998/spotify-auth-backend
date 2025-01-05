@@ -14,7 +14,7 @@ const storePresaveDetails = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { artist, songLink, title, releaseDate, timeZone, providers } = req.body;
+        const { creatorId, artist, songLink, title, releaseDate, timeZone, providers } = req.body;
 
         // Query the "presaves" collection to check for its existence
         const presavesSnapshot = await fireStore.collection("presaves").limit(1).get();
@@ -26,7 +26,7 @@ const storePresaveDetails = async (req, res) => {
 
         // Create a new presave document
         const newPresaveData = {
-            creatorId: generateRandomId(), //replace withUser UUID
+            creatorId: creatorId || generateRandomId(), //replace withUser UUID
             title,
             artist,
             releaseDate,

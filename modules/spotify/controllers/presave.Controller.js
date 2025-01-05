@@ -3,14 +3,11 @@ const { fireStore } = require("../../../config/firestore");
 const { scheduleTask } = require("../../../services/taskQueue");
 const moment = require("moment");
  
-
-
-
+ 
 
 // Function to fetch presave data and schedule the task
-const handlePresave = async (req, res) => {
-    const { presaveID } = req.params;
-    const { accessToken, libraryId = "my-library" } = req.body;
+const handlePresave = async (req, res) => { 
+    const { presaveID, accessToken, libraryId = "my-library" } = req.body;
 
     try {
         // Fetch presave data from Firestore
@@ -24,7 +21,7 @@ const handlePresave = async (req, res) => {
         const presaveData = presaveDoc.data();
         const { songLink, releaseDate, timeZone } = presaveData;
 
-        // Query users collection to find the user by accessToken
+        // Query users collection to find the user by accessToken if not passed
         const usersRef = fireStore.collection("users");
         const querySnapshot = await usersRef.where("spotify.accessToken", "==", accessToken).get();
 
