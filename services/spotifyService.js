@@ -17,23 +17,32 @@ const addToLibrary = async (accessToken, songUrl, libraryId) => {
         const trackId = match[1]; // Extract trackId from songUrl
 
         // Determine the endpoint based on the libraryId
-        const endpoint =
-            libraryId === 'my-library'
-                ? `https://api.spotify.com/v1/me/tracks?ids=${trackId}` // Add to user's library
-                : `https://api.spotify.com/v1/playlists/${libraryId}/tracks?uris=spotify:track:${trackId}`; // Add to a playlist
+        if (libraryId === 'my-library') {
+            // Add to the user's library
+            addTrackResponse = await axios.put(
+                `https://api.spotify.com/v1/me/tracks?ids=${trackId}`,
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+        } else {
+            // Add track to the selected library
+            addTrackResponse = await axios.post(
+                `https://api.spotify.com/v1/playlists/${libraryId}/tracks?uris=spotify:track:${trackId}`,
+                null,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
 
-        // Add track to the selected library or playlist
-        const addTrackResponse = await axios.post(
-            endpoint,
-            null, // No request body needed for these endpoints
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-
+        }
         console.log('Track successfully added:', addTrackResponse.data); // Log successful response
 
         // Return success message
@@ -43,7 +52,7 @@ const addToLibrary = async (accessToken, songUrl, libraryId) => {
             data: addTrackResponse.data,
         };
     } catch (error) {
-        console.error('Error adding song to library:', error.message || error);
+        console.error('Error adding song to library:', error );
 
         // Return error details
         return {
