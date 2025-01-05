@@ -1,6 +1,6 @@
 const Bull = require('bull');
 const moment = require('moment-timezone');
-const { addToLibrary } = require('../spotify/services/spotify.Service');
+const { addToLibrary } = require('../modules/spotify/services/spotify.Service');
 
 // Create a new queue (ensure it's using Bull v4.x)
 const taskQueue = new Bull('taskQueue', {
@@ -25,5 +25,5 @@ taskQueue.process(async (job) => {
         console.error(`Error adding song for user ${userId}:`, error.message);
     }
 });
- 
+
 module.exports = { taskQueue };

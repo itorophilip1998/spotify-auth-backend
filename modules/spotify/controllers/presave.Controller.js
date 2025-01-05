@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
-const { fireStore } = require("../../config/firestore");
-const { scheduleTask } = require("../../services/taskQueue");
+const { fireStore } = require("../../../config/firestore");
+const { scheduleTask } = require("../../../services/taskQueue");
 const moment = require("moment");
 const generateRandomId = () => {
     const randomId = `creatorId-${Date.now()}${Math.floor(Math.random() * 10000000000000000)}`;
@@ -26,7 +26,7 @@ const preSaveController = async (req, res) => {
 
         // Create a new presave document
         const newPresaveData = {
-            creatorId: generateRandomId(),
+            creatorId: generateRandomId(), //replace withUser UUID
             title,
             artist,
             releaseDate,

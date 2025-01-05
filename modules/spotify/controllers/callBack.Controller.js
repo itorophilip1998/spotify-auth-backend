@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { fireStore } = require("../../config/firestore");
+const { fireStore } = require("../../../config/firestore");
 
 const {
     SPOTIFY_CLIENT_ID,
