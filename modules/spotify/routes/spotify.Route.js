@@ -10,7 +10,7 @@ const express = require('express');
 const router = express.Router();  // Create a router instance
 
 // Define your routes
-router.get('/login', loginController); // Spotify login
+router.get('/login', loginController); // Spotify login it a redirect
 router.get('/callback', callbackController); // Spotify callback
 router.post('/add-song', addSongController); // Add song to library or playlist
 router.get('/track-details', trackDetailsController); // Fetch track details

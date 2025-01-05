@@ -4,7 +4,7 @@ const { storePresaveDetails, getPresaveDetails } = require('../controllers/presa
 const express = require('express');
 const router = express.Router();
 
-router.post("/store-get", storePresaveDetails);
-router.post("/get-details", getPresaveDetails);
+router.post("/store-details", storePresaveDetails);
+router.get("/get-details", getPresaveDetails);
 
 module.exports = router;

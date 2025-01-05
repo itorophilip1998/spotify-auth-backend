@@ -38,7 +38,7 @@ const storePresaveDetails = async (req, res) => {
 
         const newPresaveRef = await fireStore.collection("presaves").add(newPresaveData);
 
-        res.status(201).json({
+        res.status(200).json({
             message: "Presave created successfully",
             id: newPresaveRef.id,
             ...newPresaveData,
