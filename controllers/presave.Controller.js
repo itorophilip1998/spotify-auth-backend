@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const { fireStore } = require("../config/firestore");
-const { scheduleTask } = require("../utils/scheduleTask");
+const { scheduleTask } = require("../utils/taskQueue");
 const moment = require("moment");
 const generateRandomId = () => {
     const randomId = `creatorId-${Date.now()}${Math.floor(Math.random() * 10000000000000000)}`;
