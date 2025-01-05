@@ -10,7 +10,8 @@ const { addSongController } = require('./controllers/addSong.Controller');
 const { trackDetailsController } = require('./controllers/trackDetails.Controller');
 const { getLibraryController } = require('./controllers/getLibrary.Controller');
 const { preSaveController, getPresaveController, handlePresave } = require('./controllers/presave.Controller');
-
+const { router } = require('bull-board');
+const { taskQueue } = require('./taskQueue');  // Import your taskQueue
 const app = express();
 const port = process.env.PORT || 8000;
 
@@ -57,6 +58,13 @@ app.get('/get-presave', getPresaveController);
 // Endpoint to handle pre-save
 app.post("/presave/:presaveID", handlePresave);
 
+
+// Set up Bull Board to monitor the taskQueue
+const { setQueues, BullAdapter } = require('bull-board');
+setQueues([new BullAdapter(taskQueue)]);
+
+// Add Bull Board route to the app
+app.use('/admin/queues', router);
 
 // Start server
 app.listen(port, () => {
