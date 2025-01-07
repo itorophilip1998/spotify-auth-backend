@@ -1,34 +1,19 @@
-# Stage 1: Build stage
-FROM node:18 as builder
-
-# Set the working directory
-WORKDIR /app
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the application code
-COPY . .
-
-# Build the application (if required)
-# RUN npm run build  # Uncomment this if your app requires a build step
-
-# Stage 2: Production stage
+# Use the official Node.js image
 FROM node:18-alpine
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy only the necessary files from the build stage
-COPY --from=builder /app .
+# Copy only package.json and yarn.lock for dependency installation
+COPY package.json yarn.lock ./
 
-# Install only production dependencies
-RUN npm install --production
+# Install dependencies
+RUN yarn install --production
 
-# Expose the application port
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port your app will run on
 EXPOSE 8000
 
 # Start the application
