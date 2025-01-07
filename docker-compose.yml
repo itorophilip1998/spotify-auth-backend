@@ -2,16 +2,26 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
+    container_name: node-app
     ports:
-      - "8000:8000" # Map the container's port 8000 to the host
+      - "8000:8000"
+    depends_on:
+      - redis
     environment:
-      NODE_ENV: production
-      PORT: 8000
-      # Add other environment variables here (e.g., DATABASE_URL, SPOTIFY_API_KEY, etc.)
-    volumes:
-      - .:/app  # Bind mount for development
-      - /app/node_modules # Prevent node_modules from being overwritten
-    command: ["node", "index.js"]
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

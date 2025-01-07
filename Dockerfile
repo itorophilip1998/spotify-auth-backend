@@ -1,20 +1,23 @@
-# Use the official Node.js image
+# Step 1: Use the official Node.js image
 FROM node:18-alpine
 
-# Set the working directory inside the container
+# Step 2: Set the working directory inside the container
 WORKDIR /app
 
-# Copy only package.json and yarn.lock for dependency installation
+# Step 3: Install pm2 globally
+RUN npm install -g pm2
+
+# Step 4: Copy package.json and yarn.lock (or package-lock.json if you're using npm)
 COPY package.json yarn.lock ./
 
-# Install dependencies
+# Step 5: Install dependencies
 RUN yarn install --production
 
-# Copy the rest of the application code
+# Step 6: Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port your app will run on
+# Step 7: Expose the application port
 EXPOSE 8000
 
-# Start the application
-CMD ["node", "index.js"]
+# Step 8: Set the command to run pm2 and start the application
+CMD ["pm2-runtime", "index.js"]
