@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000" # Map the container's port 8000 to the host
+    environment:
+      NODE_ENV: production
+      PORT: 8000
+      # Add other environment variables here (e.g., DATABASE_URL, SPOTIFY_API_KEY, etc.)
+    volumes:
+      - .:/app  # Bind mount for development
+      - /app/node_modules # Prevent node_modules from being overwritten
+    command: ["node", "index.js"]

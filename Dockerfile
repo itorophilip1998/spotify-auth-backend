@@ -1,23 +1,35 @@
-# Use the official Node.js image from Docker Hub
-FROM node:18
+# Stage 1: Build stage
+FROM node:18 as builder
 
-# Set the working directory inside the container
-WORKDIR /usr/src/app
+# Set the working directory
+WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies (including PM2)
+# Install dependencies
 RUN npm install
 
-# Install PM2 globally (if not added to package.json dependencies)
-RUN npm install pm2 -g
-
-# Copy the rest of the application code
+# Copy the application code
 COPY . .
 
-# Expose the port your app will run on (adjust based on your app's configuration)
-EXPOSE 3000
+# Build the application (if required)
+# RUN npm run build  # Uncomment this if your app requires a build step
 
-# Start the app using PM2 (it will use ecosystem.config.js to run the app)
-CMD ["pm2-runtime", "ecosystem.config.js"]
+# Stage 2: Production stage
+FROM node:18-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy only the necessary files from the build stage
+COPY --from=builder /app .
+
+# Install only production dependencies
+RUN npm install --production
+
+# Expose the application port
+EXPOSE 8000
+
+# Start the application
+CMD ["node", "index.js"]
